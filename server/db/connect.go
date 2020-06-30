@@ -2,12 +2,14 @@ package db
 import (
 	"fmt"
 	"os"
+
 	"gopkg.in/mgo.v2"
 )
 
 var (
 	// Session stores mongo session
 	Session *mgo.Session
+
 	// Mongo stores the mongodb connection string information
 	Mongo *mgo.DialInfo
 )
@@ -35,4 +37,8 @@ func Connect() {
 	fmt.Println("Connected to", uri)
 	Session = s
 	Mongo = mongo
+}
+// Close close mongodb connection
+func Close(){
+	Session.Close()
 }

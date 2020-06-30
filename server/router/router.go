@@ -23,7 +23,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		c.String(http.StatusNotFound, "The incorrect API route.")
 	})
 	// swagger api 文档
-	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// // 登录
 	// g.POST("/v1/login", user.Login)
 	// rUser.POST("/v1/register", user.Register)

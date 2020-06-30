@@ -3,6 +3,7 @@ package v1
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"server/pkg/errno"
 )
 
 type Response struct {

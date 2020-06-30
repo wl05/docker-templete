@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	"gopkg.in/mgo.v2/bson"
@@ -14,7 +14,10 @@ type User struct {
 	ID    bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
 	Email string        `json:"email" binding:"required" bson:"email"`
 	Password         string        `json:"password" binding:"required" bson:"password"`
+	Username string `json:"username" binding:"required" bson:"username"`
 }
+
+
 
 // LoginReq params
 type LoginReq struct {

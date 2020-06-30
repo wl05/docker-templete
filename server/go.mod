@@ -13,6 +13,7 @@ require (
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.5.1
 	github.com/willf/pad v0.0.0-20200313202418-172aa767f2a4
+	go.mongodb.org/mongo-driver v1.3.4
 	golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )

@@ -21,7 +21,6 @@ import (
 // @Success 200 {object} user.LoginResponse "{"code":0,"message":"OK","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjgwMTY5MjIsImlkIjowLCJuYmYiOjE1MjgwMTY5MjIsInVzZXJuYW1lIjoiYWRtaW4ifQ.LjxrK9DuAwAzUD8-9v43NzWBN7HXsSLfebw92DKd1JQ"}}"
 // @Router /v1/login [post]
 func Login(c *gin.Context) {
-	log.Info("User login function called.", lager.Data{"X-Request-Id": util.GetReqID(c)})
 	// Binding the data with the user struct.
 	var u LoginRequest
 	if err := c.Bind(&u); err != nil {

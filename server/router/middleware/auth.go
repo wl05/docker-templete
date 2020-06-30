@@ -1,9 +1,12 @@
 package middleware
 
 import (
+	"server/handler/v1"
+	"server/pkg/errno"
+	"server/pkg/token"
 	"github.com/gin-gonic/gin"
 )
-// AuthMiddleware Parse the json web token.
+
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Parse the json web token.
