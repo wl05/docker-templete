@@ -1,20 +1,18 @@
 package model
 
 import (
-	"time"
-	"github.com/globalsign/mgo/bson"
+	"server/db"
 )
 
-type User struct {
-    BaseModel
-	Name      string        `json:"name"`
-	Email     string        `json:"email"`
-	Avatar    string        `json:"avatar"`
-	UserName  string        `json:"username"`
-	PassWord  string        `json:"password"`
+type UserModel struct {
+	BaseModel
+	UserName string `json:"username"`
+	Email    string `json:"email"`
+	Avatar   string `json:"avatar"`
+	PassWord string `json:"password"`
 }
 
 // Create creates a new user account.
 func (u *UserModel) Create() error {
-	return DB.Self.Create(&u).Error
+	return db.DB.C("users").Insert(u)
 }

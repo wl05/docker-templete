@@ -21,8 +21,9 @@ func Create(c *gin.Context) {
 
 	u := model.UserModel{
 		Username: r.Username,
-		Password: r.Password,
+		Email: r.Email,
 		Avatar:   "https://user-gold-cdn.xitu.io/2019/5/29/16b028263cf8b532?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1",
+		Password: r.Password,
 	}
 
 	// Encrypt the user password.

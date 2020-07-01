@@ -1,44 +1,32 @@
-package db
-import (
-	"fmt"
-	"os"
+package model
 
-	"gopkg.in/mgo.v2"
+import (
+	"github.com/globalsign/mgo"
+	"server/config"
+	"fmt"
 )
 
 var (
+	DB *mgo.Database
 	// Session stores mongo session
 	Session *mgo.Session
-
-	// Mongo stores the mongodb connection string information
-	Mongo *mgo.DialInfo
 )
 
-const (
-	// MongoDBUrl is the default mongodb url that will be used to connect to the database.
-	MongoDBUrl = "mongodb://localhost:27017/share-demo"
-)
-
-// Connect connects to mongodb
-func Connect() {
-	uri := os.Getenv("MONGODB_URL")
-
-	if len(uri) == 0 {
-		uri = MongoDBUrl
+func initMongo() {
+	fmt.Println(config.MongoDBUrl)
+	session, err := mgo.Dial(config.MongoDBUrl)
+	if( err != nil) {
+		fmt.Println(err.Error())
 	}
+	Session = session
+	DB = session.DB(config.MongoConf.Database)
 
-	mongo, err := mgo.ParseURL(uri)
-	s, err := mgo.Dial(uri)
-	if err != nil {
-		fmt.Printf("Can't connect to mongo, go error %v\n", err)
-		panic(err.Error())
-	}
-	s.SetSafe(&mgo.Safe{})
-	fmt.Println("Connected to", uri)
-	Session = s
-	Mongo = mongo
 }
-// Close close mongodb connection
-func Close(){
+
+func Close()  {
 	Session.Close()
+}
+
+func init() {
+	initMongo()
 }
