@@ -1,26 +1,20 @@
 package model
 
 import (
-	"gopkg.in/mgo.v2/bson"
+	"time"
+	"github.com/globalsign/mgo/bson"
 )
 
-const (
-	// CollectionUser holds the name of the user collection
-	CollectionUser = "user"
-)
-
-// User model
 type User struct {
-	ID    bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
-	Email string        `json:"email" binding:"required" bson:"email"`
-	Password         string        `json:"password" binding:"required" bson:"password"`
-	Username string `json:"username" binding:"required" bson:"username"`
+    BaseModel
+	Name      string        `json:"name"`
+	Email     string        `json:"email"`
+	Avatar    string        `json:"avatar"`
+	UserName  string        `json:"username"`
+	PassWord  string        `json:"password"`
 }
 
-
-
-// LoginReq params
-type LoginReq struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+// Create creates a new user account.
+func (u *UserModel) Create() error {
+	return DB.Self.Create(&u).Error
 }

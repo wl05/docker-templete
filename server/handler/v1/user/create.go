@@ -3,18 +3,14 @@ package user
 import (
 	. "server/handler/v1"
 	"server/model"
-	"server/pkg/errno"
-	"github.com/gin-gonic/gin"	
-)
+	"github.com/gin-gonic/gin"
+	"server/pkg/auth"
 
-// @Summary Add new user to the database
-// @Description Add a new user
-// @Tags user
-// @Accept  json
-// @Produce  json
-// @Param user body user.CreateRequest true "Create a new user"
-// @Success 200 {object} user.CreateResponse "{"code":0,"message":"OK","data":{"username":"kong"}}"
-// @Router /v1/user [post]
+)
+type CreateResponse struct {
+	Username string `json:"username"`
+}
+
 func Create(c *gin.Context) {
 
 	var r CreateRequest
@@ -26,10 +22,11 @@ func Create(c *gin.Context) {
 	u := model.UserModel{
 		Username: r.Username,
 		Password: r.Password,
+		Avatar:   "https://user-gold-cdn.xitu.io/2019/5/29/16b028263cf8b532?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1",
 	}
 
 	// Encrypt the user password.
-	if err := u.Encrypt(); err != nil {
+	if err := auth.Encrypt(); err != nil {
 		SendResponse(c, errno.ErrEncrypt, nil)
 		return
 	}

@@ -4,18 +4,18 @@ import (
 	"server/db"
 	"github.com/gin-gonic/gin"
 	"server/router"
+	"fmt"
 	
 )
 
-const port = "8888"
+const port = 3000
 func main() {
 	db.Connect()
+	defer db.Close()
 	// Creates a router without any middleware by default
 	app := gin.New()
-	Routes.
-	router.Load(
-		app
+	router.Run(
+		app,
 	)
-
 	app.Run(":" + fmt.Sprintf("%d", port))
 }
