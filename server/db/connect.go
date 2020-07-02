@@ -1,4 +1,4 @@
-package model
+package db
 
 import (
 	"github.com/globalsign/mgo"
@@ -12,21 +12,17 @@ var (
 	Session *mgo.Session
 )
 
-func initMongo() {
+func Connect() {
 	fmt.Println(config.MongoDBUrl)
 	session, err := mgo.Dial(config.MongoDBUrl)
-	if( err != nil) {
+	if err != nil {
 		fmt.Println(err.Error())
 	}
 	Session = session
-	DB = session.DB(config.MongoConf.Database)
+	DB = session.DB(config.Database)
 
 }
 
-func Close()  {
+func Close() {
 	Session.Close()
-}
-
-func init() {
-	initMongo()
 }
