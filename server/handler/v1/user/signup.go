@@ -20,15 +20,15 @@ type createRequest struct {
 	Password string `json:"password"`
 }
 
-// @Summary Add new user to the database
-// @Description Add a new user
+// @Summary register
+// @Description register
 // @Tags user
 // @Accept  json
 // @Produce  json
-// @Param user body createRequest true "Create a new user"
+// @Param user body createRequest true "register a new user"
 // @Success 200 {object} createResponse "{"code":0,"message":"OK","data":{"username":"kong"}}"
 // @Router /v1/user [post]
-func Create(c *gin.Context) {
+func Signup(c *gin.Context) {
 	var r createRequest
 	if err := c.Bind(&r); err != nil {
 		SendResponse(c, errno.ErrBind, nil)

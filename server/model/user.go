@@ -20,3 +20,11 @@ type UserModel struct {
 func (u *UserModel) Create() error {
 	return db.DB.C("users").Insert(&u)
 }
+// Get user by username
+func GetUserByName(username string) (UserModel,error){
+	var u UserModel
+	err := db.DB.C("users").Find(bson.M{
+		"Username": username,
+	}).One(&u)
+	return u,err
+}
