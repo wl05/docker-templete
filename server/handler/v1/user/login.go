@@ -30,8 +30,8 @@ type tokenResponse struct {
 // @Tags login
 // @Accept  json
 // @Produce  json
-// @Param user body user.loginRequest true "login"
-// @Success 200 {object} user.loginResponse "{"code":0,"message":"OK","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjgwMTY5MjIsImlkIjowLCJuYmYiOjE1MjgwMTY5MjIsInVzZXJuYW1lIjoiYWRtaW4ifQ.LjxrK9DuAwAzUD8-9v43NzWBN7HXsSLfebw92DKd1JQ"}}"
+// @Param user body loginRequest true "login"
+// @Success 200 {object} loginResponse "{"code":0,"message":"OK","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjgwMTY5MjIsImlkIjowLCJuYmYiOjE1MjgwMTY5MjIsInVzZXJuYW1lIjoiYWRtaW4ifQ.LjxrK9DuAwAzUD8-9v43NzWBN7HXsSLfebw92DKd1JQ"}}"
 // @Router /v1/login [post]
 func Login(c *gin.Context) {
 	// Binding the data with the user struct.
@@ -41,7 +41,6 @@ func Login(c *gin.Context) {
 		SendResponse(c, errno.ErrBind, nil)
 		return
 	}
-
 	// Get the user information by the login username.
 	d, err := model.GetUserByName(u.Username)
 	if err != nil {
@@ -56,7 +55,7 @@ func Login(c *gin.Context) {
 	}
 
 	// Sign the json web token.
-	t, err := token.Sign(c, token.Context{ID: d.ID.Hex(), Username: d.Username}, "")
+	t, err := token.Sign(c, token.Context{ID: d.ID, Username: d.Username}, "")
 	if err != nil {
 		SendResponse(c, errno.ErrToken, nil)
 		return

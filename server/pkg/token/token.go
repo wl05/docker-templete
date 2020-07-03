@@ -2,12 +2,11 @@ package token
 
 import (
 	"errors"
-	"fmt"
 	"time"
-
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
+	"github.com/globalsign/mgo/bson"
+	"server/config"
 )
 
 var (
@@ -17,7 +16,7 @@ var (
 
 // Context is the context of the JSON web token.
 type Context struct {
-	ID       string
+	ID       bson.ObjectId
 	Username string
 }
 
@@ -28,7 +27,6 @@ func secretFunc(secret string) jwt.Keyfunc {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
-
 		return []byte(secret), nil
 	}
 }
@@ -47,7 +45,7 @@ func Parse(tokenString string, secret string) (*Context, error) {
 
 		// Read the token if it's valid.
 	} else if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		ctx.ID = claims["id"].(string)
+		ctx.ID = bson.ObjectIdHex(claims["id"].(string))
 		ctx.Username = claims["username"].(string)
 		return ctx, nil
 
@@ -60,18 +58,9 @@ func Parse(tokenString string, secret string) (*Context, error) {
 // ParseRequest gets the token from the header and
 // pass it to the Parse function to parses the token.
 func ParseRequest(c *gin.Context) (*Context, error) {
-	header := c.Request.Header.Get("Authorization")
-
+	t,_ := c.Cookie("xtoken")
 	// Load the jwt secret from config
-	secret := viper.GetString("jwt_secret")
-
-	if len(header) == 0 {
-		return &Context{}, ErrMissingHeader
-	}
-
-	var t string
-	// Parse the header to get the token part.
-	fmt.Sscanf(header, "Bearer %s", &t)
+	secret := config.JwtSecret
 	return Parse(t, secret)
 }
 
@@ -79,7 +68,7 @@ func ParseRequest(c *gin.Context) (*Context, error) {
 func Sign(ctx *gin.Context, c Context, secret string) (tokenString string, err error) {
 	// Load the jwt secret from the Gin config if the secret isn't specified.
 	if secret == "" {
-		secret = viper.GetString("jwt_secret")
+		secret = config.JwtSecret
 	}
 	// The token content.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{

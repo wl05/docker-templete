@@ -24,16 +24,13 @@ func Run(g *gin.Engine) *gin.Engine {
 	// swagger api 文档
 	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	g.GET("/hello", user.Hello)
-	g.POST("/v1/register",user.Signup)
+	g.POST("/v1/signup",user.Signup)
 	g.POST("/v1/login", user.Login)	
 	// // 用户相关
 	rUser := g.Group("/v1/user")
 	rUser.Use(middleware.JwtMiddleware())
 	{
-		// rUser.DELETE("/:id", user.Delete)
-		// rUser.PUT("/:id", user.Update)
-		// rUser.GET("/info", user.List)
-		// rUser.GET("/:id", user.GetUserById)
+		rUser.GET("/info", user.GetUserInfo)
 	}
 	return g
 }

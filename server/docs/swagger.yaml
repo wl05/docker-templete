@@ -1,4 +1,19 @@
 definitions:
+  model.UserInfo:
+    properties:
+      _id:
+        type: string
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
   user.createRequest:
     properties:
       email:
@@ -13,17 +28,51 @@ definitions:
       username:
         type: string
     type: object
+  user.loginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  user.loginResponse:
+    properties:
+      username:
+        type: string
+    type: object
 info:
   contact: {}
   license: {}
 paths:
-  /v1/user:
+  /v1/login:
     post:
       consumes:
       - application/json
-      description: Add a new user
+      description: 登录
       parameters:
-      - description: Create a new user
+      - description: login
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user.loginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"message":"OK","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjgwMTY5MjIsImlkIjowLCJuYmYiOjE1MjgwMTY5MjIsInVzZXJuYW1lIjoiYWRtaW4ifQ.LjxrK9DuAwAzUD8-9v43NzWBN7HXsSLfebw92DKd1JQ"}}'
+          schema:
+            $ref: '#/definitions/user.loginResponse'
+      summary: Login generates the authentication token
+      tags:
+      - login
+  /v1/signup:
+    post:
+      consumes:
+      - application/json
+      description: signup
+      parameters:
+      - description: signup
         in: body
         name: user
         required: true
@@ -36,7 +85,22 @@ paths:
           description: '{"code":0,"message":"OK","data":{"username":"kong"}}'
           schema:
             $ref: '#/definitions/user.createResponse'
-      summary: Add new user to the database
+      summary: signup
+      tags:
+      - signup
+  /v1/user/info:
+    get:
+      consumes:
+      - application/json
+      description: Get an user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"message":"OK","data":{"username":"kong"}}'
+          schema:
+            $ref: '#/definitions/model.UserInfo'
+      summary: Get an user
       tags:
       - user
 swagger: "2.0"

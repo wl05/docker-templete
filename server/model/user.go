@@ -16,6 +16,15 @@ type UserModel struct {
 	Password  string        `json:"password" bson:"password"`
 }
 
+type UserInfo struct {
+	ID        bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
+	CreatedAt time.Time     `json:"createdAt" bson:"createdAt"`
+	UpdatedAt time.Time     `json:"updatedAt" bson:"updatedAt"`
+	Username  string        `json:"username" bson:"username"`
+	Email     string        `json:"email" bson:"email"`
+	Avatar    string        `json:"avatar" bson:"avatar"`
+}
+
 // Create creates a new user account.
 func (u *UserModel) Create() error {
 	return db.DB.C("users").Insert(&u)
@@ -24,7 +33,17 @@ func (u *UserModel) Create() error {
 func GetUserByName(username string) (UserModel,error){
 	var u UserModel
 	err := db.DB.C("users").Find(bson.M{
-		"Username": username,
+		"username": username,
+	}).One(&u)
+	return u,err
+}
+
+
+// Get user by id
+func GetUserById(id bson.ObjectId) (UserInfo,error){
+	var u UserInfo
+	err := db.DB.C("users").Find(bson.M{
+		"_id": id,
 	}).One(&u)
 	return u,err
 }
