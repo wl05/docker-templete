@@ -19,7 +19,7 @@ services:
     depends_on:
       - mongo
     ports:
-      - "8888:8888"
+      - "3000:3000"
     networks:
       - share-net
   client:                                  # 前端node容器(运行nginx中的Vue项目)
@@ -38,3 +38,4 @@ services:
       - share-net
 networks:
   share-net:
+    name: share-net
