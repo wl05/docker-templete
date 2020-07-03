@@ -6,7 +6,6 @@ import (
 	"server/pkg/errno"
 	"server/pkg/token"
 	"github.com/gin-gonic/gin"
-	"fmt"
 )
 
 // @Summary Get an user
