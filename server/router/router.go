@@ -17,6 +17,7 @@ func Run(g *gin.Engine) *gin.Engine {
 	g.Use(middleware.NoCache)
 	g.Use(middleware.Options)
 	g.Use(middleware.Secure)
+	g.Use(gin.Logger())
 	// 404 Handler.
 	g.NoRoute(func(c *gin.Context) {
 		c.String(http.StatusNotFound, "The incorrect API route.")
@@ -26,11 +27,12 @@ func Run(g *gin.Engine) *gin.Engine {
 	g.GET("/hello", user.Hello)
 	g.POST("/v1/signup",user.Signup)
 	g.POST("/v1/login", user.Login)	
-	// // 用户相关
-	rUser := g.Group("/v1/user")
+	// 用户相关
+	rUser := g.Group("/v1/users")
 	rUser.Use(middleware.JwtMiddleware())
 	{
 		rUser.GET("/info", user.GetUserInfo)
 	}
+	
 	return g
 }

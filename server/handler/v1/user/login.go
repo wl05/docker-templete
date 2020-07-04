@@ -6,8 +6,6 @@ import (
 	"server/pkg/auth"
 	"server/pkg/errno"
 	"server/pkg/token"
-	"server/config"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,7 +35,6 @@ func Login(c *gin.Context) {
 	// Binding the data with the user struct.
 	var u loginRequest
 	if err := c.Bind(&u); err != nil {
-		fmt.Println("err", err)
 		SendResponse(c, errno.ErrBind, nil)
 		return
 	}
@@ -47,20 +44,16 @@ func Login(c *gin.Context) {
 		SendResponse(c, errno.ErrUserNotFound, nil)
 		return
 	}
-
 	// Compare the login password with the user password.
 	if err := auth.Compare(d.Password, u.Password); err != nil {
 		SendResponse(c, errno.ErrPasswordIncorrect, nil)
 		return
 	}
-
 	// Sign the json web token.
 	t, err := token.Sign(c, token.Context{ID: d.ID, Username: d.Username}, "")
 	if err != nil {
 		SendResponse(c, errno.ErrToken, nil)
 		return
 	}
-	// 种下cookie
-	c.SetCookie("xtoken", t, config.CooKieMaxAge * 60 * 60,"/", "", false, true)
 	SendResponse(c, nil, tokenResponse{Token: t})
 }

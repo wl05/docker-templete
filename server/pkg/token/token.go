@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo/bson"
 	"server/config"
+	"fmt"
 )
 
 var (
@@ -35,9 +36,9 @@ func secretFunc(secret string) jwt.Keyfunc {
 // and returns the context if the token was valid.
 func Parse(tokenString string, secret string) (*Context, error) {
 	ctx := &Context{}
-
 	// Parse the token.
 	token, err := jwt.Parse(tokenString, secretFunc(secret))
+
 
 	// Parse error.
 	if err != nil {
@@ -58,9 +59,16 @@ func Parse(tokenString string, secret string) (*Context, error) {
 // ParseRequest gets the token from the header and
 // pass it to the Parse function to parses the token.
 func ParseRequest(c *gin.Context) (*Context, error) {
-	t,_ := c.Cookie("xtoken")
+	header := c.Request.Header.Get("Authorization")
 	// Load the jwt secret from config
 	secret := config.JwtSecret
+	if len(header) == 0 {
+		return &Context{}, ErrMissingHeader
+	}
+
+	var t string
+	// Parse the header to get the token part.
+	fmt.Sscanf(header, "Bearer %s", &t)
 	return Parse(t, secret)
 }
 

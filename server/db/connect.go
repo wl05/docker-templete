@@ -13,7 +13,6 @@ var (
 )
 
 func Connect() {
-	fmt.Println(config.MongoDBUrl)
 	session, err := mgo.Dial(config.MongoDBUrl)
 	if err != nil {
 		fmt.Println(err.Error())

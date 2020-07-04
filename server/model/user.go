@@ -4,6 +4,7 @@ import (
 	"server/db"
 	"time"
 	"github.com/globalsign/mgo/bson"
+	"fmt"
 )
 
 type UserModel struct {
@@ -35,6 +36,7 @@ func GetUserByName(username string) (UserModel,error){
 	err := db.DB.C("users").Find(bson.M{
 		"username": username,
 	}).One(&u)
+	fmt.Println("=====",err)
 	return u,err
 }
 
