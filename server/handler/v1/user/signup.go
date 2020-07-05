@@ -41,7 +41,7 @@ func Signup(c *gin.Context) {
 		UpdatedAt: time.Now(),
 		Username:  r.Username,
 		Email:     r.Email,
-		Avatar:    "https://user-gold-cdn.xitu.io/2019/5/29/16b028263cf8b532?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1",
+		Avatar:    "http://m.imeitou.com/uploads/allimg/2019022710/b4jgfd5plcg.jpg",
 		Password:  r.Password,
 	}
 

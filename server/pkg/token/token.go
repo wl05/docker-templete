@@ -2,12 +2,12 @@ package token
 
 import (
 	"errors"
-	"time"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo/bson"
 	"server/config"
 	"fmt"
+	"time"
 )
 
 var (
@@ -21,15 +21,10 @@ type Context struct {
 	Username string
 }
 
-// secretFunc validates the secret format.
-func secretFunc(secret string) jwt.Keyfunc {
-	return func(token *jwt.Token) (interface{}, error) {
-		// Make sure the `alg` is what we except.
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, jwt.ErrSignatureInvalid
-		}
-		return []byte(secret), nil
-	}
+type MyCustomClaims struct {
+	ID      bson.ObjectId `json:"id"`
+	Username string `json:"username"`
+	jwt.StandardClaims
 }
 
 // Parse validates the token with the specified secret,
@@ -37,13 +32,18 @@ func secretFunc(secret string) jwt.Keyfunc {
 func Parse(tokenString string, secret string) (*Context, error) {
 	ctx := &Context{}
 	// Parse the token.
-	token, err := jwt.Parse(tokenString, secretFunc(secret))
+	token, err := jwt.Parse(tokenString,  func(token *jwt.Token) (interface{}, error) {
+    // Don't forget to validate the alg is what you expect:
+    if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+        return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+    }
 
-
+    // hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+    return []byte(secret), nil
+})
 	// Parse error.
 	if err != nil {
 		return ctx, err
-
 		// Read the token if it's valid.
 	} else if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		ctx.ID = bson.ObjectIdHex(claims["id"].(string))
@@ -78,15 +78,19 @@ func Sign(ctx *gin.Context, c Context, secret string) (tokenString string, err e
 	if secret == "" {
 		secret = config.JwtSecret
 	}
+
+	// Create the Claims
+	claims := MyCustomClaims{
+		c.ID,
+		c.Username,
+		jwt.StandardClaims{
+			ExpiresAt: int64(time.Now().Unix() + 3600), // 过期时间 一小时
+			Issuer:    "ant",
+		},
+	}
 	// The token content.
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":       c.ID,
-		"username": c.Username,
-		"nbf":      time.Now().Unix(),
-		"iat":      time.Now().Unix(),
-	})
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Sign the token with the specified secret.
 	tokenString, err = token.SignedString([]byte(secret))
-
 	return
 }
