@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/router"
 	"fmt"
+	_ "server/config"
 	
 )
 

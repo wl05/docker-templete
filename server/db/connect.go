@@ -2,8 +2,8 @@ package db
 
 import (
 	"github.com/globalsign/mgo"
-	"server/config"
 	"fmt"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -13,13 +13,14 @@ var (
 )
 
 func Connect() {
-	session, err := mgo.Dial(config.MongoDBUrl)
+	fmt.Println("========",viper.GetString("MongoDBUrl"), "==========")
+	fmt.Println("========",viper.GetString("Database"), "==========")
+	session, err := mgo.Dial(viper.GetString("MongoDBUrl"))
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 	Session = session
-	DB = session.DB(config.Database)
-
+	DB = session.DB(viper.GetString("Database"))
 }
 
 func Close() {

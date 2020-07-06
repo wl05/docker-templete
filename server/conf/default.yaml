@@ -1,0 +1,5 @@
+
+Database: share-demo
+MongoDBUrl: mongodb://locahost:27017/share-demo
+CooKieMaxAge: 1
+JwtSecret: 123123
