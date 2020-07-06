@@ -5,7 +5,7 @@ import {
   Mutation,
   getModule
 } from 'vuex-module-decorators'
-import { login, logout, getUserInfo } from '@/api/users'
+import { login, getUserInfo } from '@/api/users'
 import { getToken, setToken, removeToken } from '@/utils/cookies'
 import store from '@/store'
 
@@ -80,7 +80,6 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('LogOut: token is undefined!')
     }
-    await logout()
     removeToken()
     this.SET_TOKEN('')
     this.SET_ROLES([])

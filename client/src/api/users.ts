@@ -13,9 +13,3 @@ export const login = (data: any) =>
     method: 'post',
     data
   })
-
-export const logout = () =>
-  request({
-    url: '/logout',
-    method: 'post'
-  })
