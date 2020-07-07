@@ -13,8 +13,8 @@ var (
 )
 
 func Connect() {
-	fmt.Println("========",viper.GetString("MongoDBUrl"), "==========")
-	fmt.Println("========",viper.GetString("Database"), "==========")
+	fmt.Println("========MongoDBUrl:",viper.GetString("MongoDBUrl"), "==========")
+	fmt.Println("========Database:",viper.GetString("Database"), "==========")
 	session, err := mgo.Dial(viper.GetString("MongoDBUrl"))
 	if err != nil {
 		fmt.Println(err.Error())

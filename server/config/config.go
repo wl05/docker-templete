@@ -24,10 +24,12 @@ func initConfig() (err error) {
 	for k, v := range configs {
 		viper.SetDefault(k, v)
 	}
-	env := os.Getenv("GO_ENV")
+	env := os.Getenv("GIN_MODE")
+
+	fmt.Println("========GIN_MODE:",env,"========")
 
 	// 根据配置的env读取相应的配置信息
-	if env != "" {
+	if env == "release" {
 		viper.SetConfigName(env)
 		viper.AddConfigPath(defaultPath)
 		viper.SetConfigType(configType)

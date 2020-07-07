@@ -8,7 +8,6 @@ import (
 	_ "server/config"
 	
 )
-
 const port = 3000
 func main() {
 	db.Connect()
