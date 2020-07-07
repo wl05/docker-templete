@@ -1,2 +1,7 @@
 # docker-templete
-docker compose 
+
+## Get started
+
+```bash
+$ docker-compose up -d
+```
